@@ -1,22 +1,28 @@
 package pkg;
 
 public class TestMultiCast {
-   public void test(double arg1, double arg2) {
-      useNumbers((double)((int)arg1), (double)((int)arg2));// 5
+   public void test(double var1, double var3) {
+      useNumbers((int)var1, (int)var3);// 5
    }// 6
 
-   private static void useNumbers(double arg1, double arg2) {
+   private static void useNumbers(double var0, double var2) {
    }// 10
+
+   public void test2() {
+      useNumbers(provide(), provide());// 13
+   }// 14
+
+   private static int provide() {
+      return 1;// 17
+   }
 }
 
 class 'pkg/TestMultiCast' {
    method 'test (DD)V' {
       0      4
       1      4
-      2      4
       3      4
       4      4
-      5      4
       6      4
       7      4
       8      4
@@ -26,9 +32,30 @@ class 'pkg/TestMultiCast' {
    method 'useNumbers (DD)V' {
       0      8
    }
+
+   method 'test2 ()V' {
+      0      11
+      1      11
+      2      11
+      4      11
+      5      11
+      6      11
+      8      11
+      9      11
+      a      11
+      b      12
+   }
+
+   method 'provide ()I' {
+      0      15
+      1      15
+   }
 }
 
 Lines mapping:
 5 <-> 5
 6 <-> 6
 10 <-> 9
+13 <-> 12
+14 <-> 13
+17 <-> 16

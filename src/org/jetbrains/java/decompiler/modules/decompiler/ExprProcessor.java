@@ -911,6 +911,9 @@ public class ExprProcessor implements CodeConstants {
       }
     }
 
+    // Left type: expected type
+    // Right type: given type
+
     VarType rightType = exprent.getInferredExprType(leftType);
 
     boolean cast =
@@ -919,8 +922,18 @@ public class ExprProcessor implements CodeConstants {
       (castNull && rightType.type == CodeConstants.TYPE_NULL && !UNDEFINED_TYPE_STRING.equals(getTypeName(leftType))) ||
       (castNarrowing && isIntConstant(exprent) && isNarrowedIntType(leftType));
 
+    // TODO: clean this up, this is kind of an ugly hack to get it working
+    if (cast) {
+      if (rightType.equals(VarType.VARTYPE_INT)) {
+        if (isImplicitIntCast(leftType)) {
+          cast = false;
+        }
+      }
+    }
+
     boolean castLambda = !cast && exprent.type == Exprent.EXPRENT_NEW && !leftType.equals(rightType) &&
                           lambdaNeedsCast(leftType, (NewExprent)exprent);
+
 
     boolean quote = cast && exprent.getPrecedence() >= FunctionExprent.getPrecedence(FunctionExprent.FUNCTION_CAST);
 
@@ -949,6 +962,10 @@ public class ExprProcessor implements CodeConstants {
     if (quote) buffer.append(')');
 
     return cast;
+  }
+
+  private static boolean isImplicitIntCast(VarType type) {
+    return type.equals(VarType.VARTYPE_DOUBLE) || type.equals(VarType.VARTYPE_FLOAT);
   }
 
   private static boolean isIntConstant(Exprent exprent) {

@@ -225,6 +225,9 @@ public class MethodProcessorRunnable implements Runnable {
     // Make sure to update assignments after setting the var definitions!
     SecondaryFunctionsHelper.updateAssignments(root);
 
+    // Simplify casts at the end, to ensure behavior won't change too unpredictably
+    SimplifyCastsProcessor.simplifyCasts(root);
+
     // must be the last invocation, because it makes the statement structure inconsistent
     // FIXME: new edge type needed
     LabelHelper.replaceContinueWithBreak(root);
