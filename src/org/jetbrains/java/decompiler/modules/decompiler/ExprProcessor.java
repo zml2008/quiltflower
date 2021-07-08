@@ -928,6 +928,10 @@ public class ExprProcessor implements CodeConstants {
         if (isImplicitIntCast(leftType)) {
           cast = false;
         }
+      } else if (rightType.equals(VarType.VARTYPE_FLOAT)) {
+        if (isImplicitFloatCast(leftType)) {
+          cast = false;
+        }
       }
     }
 
@@ -966,6 +970,10 @@ public class ExprProcessor implements CodeConstants {
 
   private static boolean isImplicitIntCast(VarType type) {
     return type.equals(VarType.VARTYPE_DOUBLE) || type.equals(VarType.VARTYPE_FLOAT);
+  }
+
+  private static boolean isImplicitFloatCast(VarType type) {
+    return type.equals(VarType.VARTYPE_DOUBLE);
   }
 
   private static boolean isIntConstant(Exprent exprent) {

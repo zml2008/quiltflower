@@ -1,8 +1,8 @@
 package pkg;
 
-public class TestMultiCast {
+public class TestMultiCastFloat {
    public void test(double var1, double var3) {
-      useNumbers((int)var1, (int)var3);// 5
+      useNumbers((float)var1, (float)var3);// 5
    }// 6
 
    private static void useNumbers(double var0, double var2) {
@@ -13,19 +13,23 @@ public class TestMultiCast {
    }// 14
 
    public void test3() {
-      useNumbers(provide() + 1, provide() + 1);// 17
+      useNumbers(provide() + 1.0F, provide() + 1.0F);// 17
    }// 18
 
    public void test4() {
       useNumbers(provide() + 0.5, provide() + 0.5);// 21
    }// 22
 
-   private static int provide() {
-      return 1;// 25
+   public void test5() {
+      useNumbers(provide() + 0.5F, provide() + 0.5F);// 25
+   }// 26
+
+   private static float provide() {
+      return 1.0F;// 29
    }
 }
 
-class 'pkg/TestMultiCast' {
+class 'pkg/TestMultiCastFloat' {
    method 'test (DD)V' {
       0      4
       1      4
@@ -92,9 +96,28 @@ class 'pkg/TestMultiCast' {
       13      20
    }
 
-   method 'provide ()I' {
+   method 'test5 ()V' {
       0      23
       1      23
+      2      23
+      3      23
+      4      23
+      5      23
+      7      23
+      8      23
+      9      23
+      a      23
+      b      23
+      c      23
+      e      23
+      f      23
+      10      23
+      11      24
+   }
+
+   method 'provide ()F' {
+      0      27
+      1      27
    }
 }
 
@@ -109,3 +132,5 @@ Lines mapping:
 21 <-> 20
 22 <-> 21
 25 <-> 24
+26 <-> 25
+29 <-> 28

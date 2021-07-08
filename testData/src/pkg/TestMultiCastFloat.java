@@ -1,8 +1,8 @@
 package pkg;
 
-public class TestMultiCast {
+public class TestMultiCastFloat {
     public void test(double arg1, double arg2) {
-        useNumbers((int)arg1, (int)arg2);
+        useNumbers((float)arg1, (float)arg2);
     }
 
     private static void useNumbers(double arg1, double arg2) {
@@ -21,7 +21,11 @@ public class TestMultiCast {
         useNumbers(provide() + 0.5, provide() + 0.5);
     }
 
-    private static int provide() {
+    public void test5() {
+        useNumbers(provide() + 0.5f, provide() + 0.5f);
+    }
+
+    private static float provide() {
         return 1;
     }
 }
