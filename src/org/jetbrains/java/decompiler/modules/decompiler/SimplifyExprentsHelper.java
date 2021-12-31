@@ -7,6 +7,7 @@ import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.ClassWrapper;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DeferredSSAConstructor;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
@@ -52,7 +53,7 @@ public class SimplifyExprentsHelper {
     this.firstInvocation = firstInvocation;
   }
 
-  public boolean simplifyStackVarsStatement(Statement stat, Set<Integer> setReorderedIfs, SSAConstructorSparseEx ssa, StructClass cl) {
+  public boolean simplifyStackVarsStatement(Statement stat, Set<Integer> setReorderedIfs, DeferredSSAConstructor ssa, StructClass cl) {
     boolean res = false;
 
     List<Exprent> expressions = stat.getExprents();
@@ -832,7 +833,7 @@ public class SimplifyExprentsHelper {
     return null;
   }
 
-  private static boolean buildIff(Statement stat, SSAConstructorSparseEx ssa) {
+  private static boolean buildIff(Statement stat, DeferredSSAConstructor deferredSSA) {
     if (stat.type == Statement.TYPE_IF && stat.getExprents() == null) {
       IfStatement statement = (IfStatement) stat;
       Exprent ifHeadExpr = statement.getHeadexprent();
@@ -861,9 +862,11 @@ public class SimplifyExprentsHelper {
                 boolean found = false;
 
                 // Can happen in EliminateLoopsHelper
-                if (ssa == null) {
+                if (deferredSSA == null) {
                   throw new IllegalStateException("Trying to make ternary but have no SSA-Form! How is this possible?");
                 }
+
+                SSAConstructorSparseEx ssa = deferredSSA.get();
 
                 for (Entry<VarVersionPair, FastSparseSet<Integer>> ent : ssa.getPhi().entrySet()) {
                   if (ent.getKey().var == ifVar.getIndex()) {

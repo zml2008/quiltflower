@@ -7,6 +7,7 @@ import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DeferredSSAConstructor;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectGraph;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
@@ -30,9 +31,8 @@ public class VarVersionsProcessor {
     typeProcessor = new VarTypeProcessor(mt, md);
   }
 
-  public void setVarVersions(RootStatement root, VarVersionsProcessor previousVersionsProcessor) {
-    SSAConstructorSparseEx ssa = new SSAConstructorSparseEx();
-    ssa.splitVariables(root, method);
+  public void setVarVersions(RootStatement root, VarVersionsProcessor previousVersionsProcessor, DeferredSSAConstructor deferredSSA) {
+    SSAConstructorSparseEx ssa = deferredSSA.get();
 
     FlattenStatementsHelper flattenHelper = new FlattenStatementsHelper();
     DirectGraph graph = flattenHelper.buildDirectGraph(root);

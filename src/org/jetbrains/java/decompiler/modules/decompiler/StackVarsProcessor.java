@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class StackVarsProcessor {
-  public void simplifyStackVars(RootStatement root, StructMethod mt, StructClass cl) {
+  public void simplifyStackVars(RootStatement root, StructMethod mt, StructClass cl, DeferredSSAConstructor ssa) {
     Set<Integer> setReorderedIfs = new HashSet<>();
     SSAUConstructorSparseEx ssau = null;
 
@@ -34,8 +34,8 @@ public class StackVarsProcessor {
       boolean found = false;
       boolean first = ssau == null;
 
-      SSAConstructorSparseEx ssa = new SSAConstructorSparseEx();
-      ssa.splitVariables(root, mt);
+      // Invalidate SSA-Form so that it gets recalculated next time it's needed
+      ssa.invalidate();
 
       SimplifyExprentsHelper sehelper = new SimplifyExprentsHelper(first);
       while (sehelper.simplifyStackVarsStatement(root, setReorderedIfs, ssa, cl)) {

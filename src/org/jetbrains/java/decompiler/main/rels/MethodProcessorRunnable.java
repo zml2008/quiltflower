@@ -11,6 +11,7 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.modules.code.DeadCodeHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.*;
 import org.jetbrains.java.decompiler.modules.decompiler.deobfuscator.ExceptionDeobfuscator;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DeferredSSAConstructor;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.struct.StructClass;
@@ -173,6 +174,7 @@ public class MethodProcessorRunnable implements Runnable {
     SequenceHelper.condenseSequences(root);
     decompileRecord.add("CondenseSequences_1", root);
 
+    DeferredSSAConstructor ssa = new DeferredSSAConstructor(root, mt);
     StackVarsProcessor stackProc = new StackVarsProcessor();
 
     // Process and simplify variables on the stack
@@ -180,11 +182,13 @@ public class MethodProcessorRunnable implements Runnable {
     do {
       stackVarsProcessed++;
 
-      stackProc.simplifyStackVars(root, mt, cl);
+      stackProc.simplifyStackVars(root, mt, cl, ssa);
       decompileRecord.add("SimplifyStackVars_PPMM_" + stackVarsProcessed, root);
 
-      varProc.setVarVersions(root);
+      varProc.setVarVersions(root, ssa);
       decompileRecord.add("SetVarVersions_PPMM_" + stackVarsProcessed, root);
+
+      ssa.invalidate();
     } while (new PPandMMHelper(varProc).findPPandMM(root));
 
     // Inline ppi/mmi that we may have missed
@@ -250,11 +254,13 @@ public class MethodProcessorRunnable implements Runnable {
         }
       }
 
-      stackProc.simplifyStackVars(root, mt, cl);
+      stackProc.simplifyStackVars(root, mt, cl, ssa);
       decompileRecord.add("SimplifyStackVars", root);
 
-      varProc.setVarVersions(root);
+      varProc.setVarVersions(root, ssa);
       decompileRecord.add("SetVarVersions", root);
+
+      ssa.invalidate();
 
       if (DecompilerContext.getOption(IFernflowerPreferences.PATTERN_MATCHING)) {
         if (cl.getVersion().hasIfPatternMatching()) {
@@ -319,7 +325,7 @@ public class MethodProcessorRunnable implements Runnable {
           decompileRecord.add("ProcessSwitchExpr_SS", root);
 
           // Simplify stack vars to integrate and inline switch expressions
-          stackProc.simplifyStackVars(root, mt, cl);
+          stackProc.simplifyStackVars(root, mt, cl, ssa);
           decompileRecord.add("SimplifyStackVars_SS", root);
         }
       }

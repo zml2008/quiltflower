@@ -3,6 +3,7 @@ package org.jetbrains.java.decompiler.modules.decompiler.vars;
 
 import org.jetbrains.java.decompiler.main.collectors.VarNamesCollector;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DeferredSSAConstructor;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.struct.StructMethod;
@@ -33,10 +34,10 @@ public class VarProcessor {
     methodDescriptor = md;
   }
 
-  public void setVarVersions(RootStatement root) {
+  public void setVarVersions(RootStatement root, DeferredSSAConstructor ssa) {
     VarVersionsProcessor oldProcessor = varVersions;
     varVersions = new VarVersionsProcessor(method, methodDescriptor);
-    varVersions.setVarVersions(root, oldProcessor);
+    varVersions.setVarVersions(root, oldProcessor, ssa);
   }
 
   public void setVarDefinitions(Statement root) {
