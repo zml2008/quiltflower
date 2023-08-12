@@ -1,0 +1,64 @@
+plugins {
+  id 'org.vineflower.convention.base'
+  id 'io.github.gradle-nexus.publish-plugin'
+  id 'maven-publish'
+  id 'signing'
+}
+
+def ENV = System.getenv()
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      pom {
+        packaging = 'jar'
+        // optionally artifactId can be defined here
+        description = 'Modern Java & JVM language decompiler aiming to be as accurate as possible, with an emphasis on output quality.'
+        url = 'https://vineflower.org'
+
+        scm {
+          connection = 'scm:git:https://github.com/Vineflower/vineflower.git'
+          developerConnection = 'scm:git:ssh:git@github.com:Vineflower/vineflower.git'
+          url = 'https://github.com/Vineflower/vineflower'
+        }
+
+        licenses {
+          license {
+            name = 'The Apache License, Version 2.0'
+            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id = 'vineflower'
+            name = 'Vineflower Development Team'
+            email = '~jasmine/vineflower-discuss@lists.sr.ht'
+          }
+        }
+      }
+
+      from components.java
+    }
+  }
+}
+
+nexusPublishing {
+  repositories {
+    sonatype {
+      username = ENV.SONATYPE_USER
+      password = ENV.SONATYPE_PASS
+
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+  }
+}
+
+signing {
+  def signingKey = ENV.SIGNING_KEY
+  def signingPassword = ENV.SIGNING_KEY_PASSPHRASE
+
+  useInMemoryPgpKeys(signingKey, signingPassword)
+  sign publishing.publications.mavenJava
+}

@@ -1,14 +1,10 @@
 plugins {
+  id 'org.vineflower.convention.base'
   id 'com.github.johnrengelman.shadow'
-  id 'java'
   id 'org.jetbrains.kotlin.jvm'
 }
 
-apply plugin: 'maven-publish'
-
-group = 'org.vineflower'
 version = "0.1.0"
-archivesBaseName = 'vineflower-kotlin'
 
 sourceSets {
   testDataKotlin.kotlin.srcDirs files("testData/src/kt/")
@@ -43,14 +39,3 @@ shadowJar {
 }
 
 build.dependsOn(shadowJar)
-
-// TODO: re-enable after we're publishing for this!
-//publishing {
-//  publications {
-//    mavenJava(MavenPublication) {
-//      artifactId = "vineflower-kotlin"
-//      from components.java
-//      artifact(shadowJar)
-//    }
-//  }
-//}

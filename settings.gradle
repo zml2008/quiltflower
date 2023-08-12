@@ -17,5 +17,8 @@ rootProject.name = 'vineflower'
   'scala'
 ].each {
   include it
-  project(":$it").projectDir = new File(rootProject.projectDir, "plugins/$it")
+  project(":$it").tap { desc ->
+    name = "vineflower-$it"
+    projectDir = new File(rootProject.projectDir, "plugins/$it")
+  }
 }

@@ -1,8 +1,8 @@
 plugins{
+  id 'org.vineflower.convention.base'
   id 'scala'
 }
 
-archivesBaseName = 'vineflower-scala'
 sourceSets {
   testDataScala.scala.srcDirs files("testData/src/scala/")
 }

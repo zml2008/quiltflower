@@ -1,0 +1,56 @@
+import org.vineflower.build.VineflowerExtension
+
+plugins {
+  id 'java-library'
+}
+
+group = 'org.vineflower'
+
+def vineflower = extensions.create('vineflower', VineflowerExtension)
+
+compileJava {
+  sourceCompatibility = '11'
+  targetCompatibility = '11'
+}
+
+java.toolchain {
+  languageVersion = JavaLanguageVersion.of(11)
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.jetbrains:annotations:24.0.0'
+  testImplementation(platform("org.junit:junit-bom:${project.junit_bom}"))
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+  // Runtime requirements
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+test {
+  useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+  it.options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc).configureEach {
+  failOnError false
+  options.addStringOption('Xdoclint:none', '-quiet')
+  options.addStringOption('encoding', 'UTF-8')
+  options.addStringOption('charSet', 'UTF-8')
+}
+
+java {
+  withSourcesJar()
+  withJavadocJar()
+}
+
+tasks.withType(Jar).configureEach {
+  reproducibleFileOrder = true
+  preserveFileTimestamps = false
+}
