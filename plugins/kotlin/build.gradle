@@ -35,7 +35,7 @@ jar {
 }
 
 shadowJar {
-  archiveClassifier.set('')
+  archiveClassifier = ''
 }
 
 build.dependsOn(shadowJar)

@@ -7,7 +7,7 @@ plugins {
   id 'java-test-fixtures'
   id 'groovy'
   id 'scala'
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
   id 'org.jetbrains.kotlin.jvm' version '1.6.21'
   id 'org.vineflower.convention.publishing'
 }
@@ -18,7 +18,7 @@ allprojects {
 
 }
 
-archivesBaseName = 'vineflower'
+base.archivesBaseName = 'vineflower'
 version = '1.10.0'
 
 def ENV = System.getenv()
