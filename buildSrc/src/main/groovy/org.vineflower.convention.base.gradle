@@ -13,8 +13,12 @@ compileJava {
   targetCompatibility = '11'
 }
 
-java.toolchain {
-  languageVersion = JavaLanguageVersion.of(11)
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
+  withSourcesJar()
+  withJavadocJar()
 }
 
 repositories {
